@@ -14,15 +14,30 @@ class GoogleCloudAuthWrapper implements GoogleCloudWrapperInterface {
 
     var $CI;
     var $config;
+    var $workingDir;
+    var $certDir;
     
-    public function __construct() {
+    public function __construct( $config=null ) {
         $this->CI =& get_instance();
         $this->config = config_item('gcloud');
+        $this->workingDir = makepath(APPPATH, 'third_party', 'uchilaka', 'ci-cloudkit');
+        $this->certDir = makepath($this->workingDir, 'certs');
+        // include json file in configuration
+        if(!array_key_exists('json_file', $config)) {
+            throw new Exception('GoogleCloudAuthWrapper MUST be initialized with a configuration arguments including the key for a Google Cloud service account `json_file`', 400);
+        }
+        $json = json_decode(file_get_contents($config['json_file']));
+        // check for RSA certificate file
+        $rsaFileURI = makepath($this->certDir, 'RSA.crt');
+        if(!is_file($rsaFileURI)) {
+            file_put_contents($rsaFileURI, $json->private_key);
+        }
+        print_r($json);
+        die();
     }
     
     public function getClient() {
         $client = new Google_Client();
-        //$gcloudConfigFileURI = config_item('gcloud')['json'];
         $gcloudConfigFileURI = $this->config['json'];
         # print_r($gcloudConfigFileURI);
         # die();
