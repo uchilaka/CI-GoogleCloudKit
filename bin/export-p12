@@ -1,2 +1,2 @@
 #!/bin/bash
-openssl pkcs12 -inkey ../certs/RSA.txt -in ../certs/gcloud.crt -export -out ../certs/gcloud.p12
+openssl pkcs12 -inkey ../certs/RSA.crt -in ../certs/gcloud.crt -export -out ../certs/gcloud.p12

@@ -1,2 +1,2 @@
 #!/bin/bash
-openssl req -key ../certs/RSA.txt -new -x509 -days 1024 -out ../certs/gcloud.crt
+openssl req -key ../certs/RSA.crt -new -x509 -days 1024 -out ../certs/gcloud.crt

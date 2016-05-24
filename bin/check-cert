@@ -1,2 +1,2 @@
 #!/bin/bash
-openssl rsa -in ../certs/x509.txt -check
+openssl rsa -in ../certs/RSA.crt -check

@@ -4,6 +4,11 @@ interface GoogleCloudWrapperInterface {
     public function getService(Google_Client $client);
 }
 
+/** @TODO 
+ * Make the following directories writeable by the PHP process: 
+ * /third_party/uchiaka/ci-gcloudkit/bin 
+ * /third_party/uchiaka/ci-gcloudkit/certs
+**/
 class GoogleCloudAuthWrapper implements GoogleCloudWrapperInterface {
 
     const HTTP_GET = 'GET';
@@ -20,25 +25,29 @@ class GoogleCloudAuthWrapper implements GoogleCloudWrapperInterface {
     public function __construct( $config=null ) {
         $this->CI =& get_instance();
         $this->config = config_item('gcloud');
-        $this->workingDir = makepath(APPPATH, 'third_party', 'uchilaka', 'ci-cloudkit');
+        $this->workingDir = makepath(APPPATH, 'third_party', 'uchilaka', 'ci-gcloudkit');
         $this->certDir = makepath($this->workingDir, 'certs');
         // include json file in configuration
         if(!array_key_exists('json_file', $config)) {
             throw new Exception('GoogleCloudAuthWrapper MUST be initialized with a configuration arguments including the key for a Google Cloud service account `json_file`', 400);
         }
-        $json = json_decode(file_get_contents($config['json_file']));
+        $json = json_decode(file_get_contents($config['json_file']), true);
         // check for RSA certificate file
         $rsaFileURI = makepath($this->certDir, 'RSA.crt');
         if(!is_file($rsaFileURI)) {
-            file_put_contents($rsaFileURI, $json->private_key);
+            file_put_contents($rsaFileURI, $json['private_key']);
         }
-        print_r($json);
-        die();
+        $p12FileURI = makepath($this->certDir, 'gcloud.p12');
+        if(!is_file($p12FileURI)) {
+            throw new Exception('Please follow the instructions for generating the .p12 certificate from your RSA private key (included in your google cloud json service account file)', 400);
+        }
+        // expand config to include contents of service account json
+        $this->config['json_file'] = $config['json_file'];
     }
     
     public function getClient() {
         $client = new Google_Client();
-        $gcloudConfigFileURI = $this->config['json'];
+        $gcloudConfigFileURI = $this->config['json_file'];
         # print_r($gcloudConfigFileURI);
         # die();
         $configJSON = json_decode(file_get_contents($gcloudConfigFileURI));
