@@ -8,7 +8,7 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
     public function __construct() {
         parent::__construct();
         // load directory library
-        $this->load->library('dir');
+        $this->CI->load->library('dir');
         // set app bucket name
         $this->bucketName = 'larcity-io-public';
     }
