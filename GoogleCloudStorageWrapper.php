@@ -5,6 +5,10 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
     
     var $bucketName;
     
+    const SCOPE_READ = 'https://www.googleapis.com/auth/devstorage.read_only';
+    const SCOPE_READWRITE = 'https://www.googleapis.com/auth/devstorage.read_write';
+    const SCOPE_FULLCONTROL = 'https://www.googleapis.com/auth/devstorage.full_control';
+    
     public function __construct( $config=null ) {
         parent::__construct($config);
         // load directory library
@@ -13,6 +17,10 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
     
     function setBucket($bucketName) {
         $this->bucketName = $bucketName;
+    }
+    
+    function getScopes() {
+        return array_merge(parent::getScopes(), [ self::SCOPE_READWRITE ]);
     }
     
     function getBucketURI( $method = self::HTTP_GET ) {
