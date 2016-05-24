@@ -1,0 +1,16 @@
+{
+    "name": "uchilaka/ci-gcloudkit",
+    "description": "Google Cloud (Storage, Auth) wrapper classes for CodeIgniter",
+    "config": {
+        "vendor-dir": "third_party"
+    },
+    "authors": [
+        {
+            "name": "Uche Chilaka",
+            "email": "uche@larcity.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "1.0.*@beta"
+    }
+}
