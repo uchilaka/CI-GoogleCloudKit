@@ -20,7 +20,7 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
     }
     
     function getScopes() {
-        return array_merge(parent::getScopes(), [ self::SCOPE_READWRITE ]);
+        return array_unique(array_merge(parent::getScopes(), [ self::SCOPE_READWRITE ]));
     }
     
     function getBucketURI( $method = self::HTTP_GET ) {

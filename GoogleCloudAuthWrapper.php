@@ -44,7 +44,11 @@ class GoogleCloudAuthWrapper implements GoogleCloudWrapperInterface {
     }
     
     public function getScopes() {
-        return [ 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile' ];
+        $scopes= [ 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile' ];
+        if(!empty($this->config['scopes'])) {
+            $scopes = array_merge($scopes, $this->config['scopes']);
+        }
+        return array_unique($scopes);
     }
     
     public function getClient() {
