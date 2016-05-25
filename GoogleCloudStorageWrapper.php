@@ -92,11 +92,12 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
             ]
         ];
         $context = stream_context_create($options);
-        $output = json_decode(file_get_contents($url, false, $context));
+        $RAW = file_get_contents($url, false, $context);
+        $output = json_decode($RAW);
         if($output->selfLink) {
             $output->publicLink = $this->getBucketURI(self::HTTP_GET) . $dir . Dir::file_name($file);
         }
-        return $output;        
+        return empty($output) ? $RAW : $output;        
     }
         
 }
