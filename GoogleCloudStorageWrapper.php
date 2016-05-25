@@ -58,6 +58,10 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
     }
     
     public function upload( $file, $dir="" ) {
+        // default bucket
+        if(empty($this->bucketName)) {
+            $this->setBucket('larcity-io-public');
+        }
         $client = $this->getClient();
         //$service = $this->getService($client);
         $credentialsString = $client->getAccessToken();
