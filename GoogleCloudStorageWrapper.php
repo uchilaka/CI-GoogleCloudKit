@@ -57,7 +57,7 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
         return new Google_Service_Storage($client);        
     }
     
-    public function upload( $file, $dir="", $mimeType='binary/octet-stream' ) {
+    public function upload( $file, $dir="", $mimeType=null ) {
         // default bucket
         if(empty($this->bucketName)) {
             $this->setBucket('larcity-io-public');
@@ -80,8 +80,10 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
             'uploadType'=>'media',
             'name'=>$dir.Dir::file_name($file),
         ];
+        if(empty($mimeType)) {
+            $mimeType = Dir::mime_type($file);
+        }
         $headers = [
-            //'Content-Type: ' . Dir::mime_type($file),
             "Content-Type: {$mimeType}",
             'Content-Length: ' . strlen($content),
             'Authorization: OAuth ' . $accessToken,
