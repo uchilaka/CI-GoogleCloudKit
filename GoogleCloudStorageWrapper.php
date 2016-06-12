@@ -76,9 +76,13 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
             $dir .= "/";
         }
         $content = file_get_contents($file);
+        // get file extension
+        $parts = explode('?', $file);
+        $filename = $parts[0];
+        //$ext = Dir::file_type($filename);
         $get_params = [
             'uploadType'=>'media',
-            'name'=>$dir.Dir::file_name($file),
+            'name'=>$dir.Dir::file_name($filename),
         ];
         if(empty($mimeType)) {
             $mimeType = Dir::mime_type($file);
@@ -102,7 +106,7 @@ class GoogleCloudStorageWrapper extends GoogleCloudAuthWrapper {
         $RAW = file_get_contents($url, false, $context);
         $output = json_decode($RAW);
         if($output->selfLink) {
-            $output->publicLink = $this->getBucketURI(self::HTTP_GET) . $dir . Dir::file_name($file);
+            $output->publicLink = $this->getBucketURI(self::HTTP_GET) . $dir . Dir::file_name($filename);
         }
         return empty($output) ? $RAW : $output;        
     }
